@@ -277,7 +277,14 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
 		this.getByteAt = function(iOffset) {
 			return IEBinary_getByteAt(data, iOffset + dataOffset);
 		};
-	}
+	} else if (typeof strData === "object" && strData.constructor.name === "ArrayBuffer") {
+    data = new DataView(strData);
+    dataLength = strData.byteLength;
+    this.getByteAt = function(iOffset) {
+      return data.getUint8(iOffset + dataOffset);
+    }
+  }
+
     // @aadsm
     this.getBytesAt = function(iOffset, iLength) {
         var bytes = new Array(iLength);
@@ -395,14 +402,3 @@ function BinaryFile(strData, iDataOffset, iDataLength) {
         callback();
     };
 }
-
-document.write(
-	"<script type='text/vbscript'>\r\n"
-	+ "Function IEBinary_getByteAt(strBinary, iOffset)\r\n"
-	+ "	IEBinary_getByteAt = AscB(MidB(strBinary,iOffset+1,1))\r\n"
-	+ "End Function\r\n"
-	+ "Function IEBinary_getLength(strBinary)\r\n"
-	+ "	IEBinary_getLength = LenB(strBinary)\r\n"
-	+ "End Function\r\n"
-	+ "</script>\r\n"
-);
