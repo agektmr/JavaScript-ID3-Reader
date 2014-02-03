@@ -23,30 +23,50 @@ How To Use It
 -------------
 
 In its simplest form:
-```
+```javascript
 ID3.loadTags("filename.mp3", function() {
-    var tags = ID3.getAllTags(filename);
+    var tags = ID3.getAllTags("filename.mp3");
     alert(tags.artist + " - " + tags.title + ", " + tags.album);
 });
 ```
 
 by specifying specific tags:
-```
+```javascript
 ID3.loadTags("filename.mp3", function() {
-    var tags = ID3.getAllTags(filename);
+    var tags = ID3.getAllTags("filename.mp3");
     alert(tags.COMM.data + " - " + tags.TCON.data + ", " + tags.WXXX.data);
 },
 {tags: ["COMM", "TCON", "WXXX"]});
 ```
 
 or even by specifying shortcuts instead of cryptic tags:
-```
+```javascript
 ID3.loadTags("filename.mp3", function() {
-    var tags = ID3.getAllTags(filename);
+    var tags = ID3.getAllTags("filename.mp3");
     alert(tags.comment + " - " + tags.track + ", " + tags.lyrics);
 },
 {tags: ["comment", "track", "lyrics"]});
 ```
+
+File API
+--------
+Reading a music file through the File API can be done by specifying the `FileAPIReader` data reader:
+
+```javascript
+ID3.loadTags("filename.mp3", function() {
+    var tags = ID3.getAllTags("filename.mp3");
+    alert(tags.comment + " - " + tags.track + ", " + tags.lyrics);
+}, {
+    dataReader: FileAPIReader(file)
+});
+```
+`file` is a `File` object as defined by the [File API](http://www.w3.org/TR/FileAPI/).
+
+Example
+-------
+See `/example` for additional information.
+Besides open http://www.aadsm.net/libraries/id3/ for a live example.
+
 Documentation
 -------------
 
@@ -113,6 +133,18 @@ for AAC:
         lyrics: string,
         genre: string
     }
+
+### How to show the cover art from the byte array:
+
+You can do this by using a `data:` url.
+
+```javascript
+var base64String = "";
+for (var i = 0; i < image.data.length; i++) {
+    base64String += String.fromCharCode(image.data[i]);
+}
+var dataUrl = "data:" + image.format + ";base64," + window.btoa(base64String);
+```
 
 ### Currently supported frames on ID3:
 
